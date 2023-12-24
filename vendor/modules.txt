@@ -1,0 +1,6 @@
+# github.com/db47h/rand64 v1.0.0
+## explicit; go 1.12
+github.com/db47h/rand64
+github.com/db47h/rand64/internal/util
+github.com/db47h/rand64/splitmix64
+github.com/db47h/rand64/xorshift

@@ -19,3 +19,9 @@
 
 # Go workspace file
 go.work
+
+.DS_store
+
+# My settings:
+generated_numbers/
+work_dir/
