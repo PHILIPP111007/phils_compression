@@ -10,54 +10,103 @@
 package main
 
 import (
-	manager "phil.com/package"
+	"fmt"
+	"path/filepath"
+	"strconv"
+
+	"github.com/db47h/rand64"
+	"github.com/db47h/rand64/xorshift"
+	"phil.com/manager"
+	"phil.com/types"
 )
 
-var files_from_generator = []string{"generated_numbers/numbers_from_generator_1.txt", "generated_numbers/numbers_from_generator_2.txt"}
-
-const new_numbers_count = 1_000_000 // 100_000_000 // сколько будет сгенерировано чисел, можно изменить но стоит учитывать вычислительные мощности компьютера
-const first_range = 10              // 10_000 // можно изменить, когда переменная new_numbers_count слишком велика, для нормальной нагрузки на память
-const file_RGB = "work_dir/RGB.json"
-
 func main() {
+	const (
+		CWD           string = "/Users/philr/Desktop/гитхаб/Сжатие/Program_Go/"
+		numbers_count        = 10_000_000 // 1_000_000_000
+		SEED          uint64 = 0          // 1387366483214
+	)
+	// var file_with_numbers string = filepath.Join(CWD, "generated_numbers", "generated_numbers.txt")
 
-	// manager.Manage_dirs()
-	// manager.Generator(
-	// 	files_from_generator,
-	// 	new_numbers_count,
-	// 	first_range,
-	// )
+	var source = xorshift.New128plus()
+	source.Seed(SEED)
+	r64 := rand64.New(source)
 
-	// fmt.Print("обработать число (1)\nобработать картинку (2)\n: ")
-	// var choice string
+	var generated_numbers [][]byte
+	for i := 0; i < numbers_count; i++ {
+		// generated_numbers = append(generated_numbers, fmt.Sprint(r64.Uint64()))
 
-	// _, err := fmt.Scanln(&choice)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
+		generated_numbers = append(generated_numbers, []byte(fmt.Sprint(r64.Uint64())))
+	}
 
-	// switch choice {
+	fmt.Println(generated_numbers[:5])
 
-	// case "1":
-	// 	var number string
-	// 	fmt.Print("Введите число: ")
-	// 	_, err := fmt.Scanln(&number)
-	// 	if err != nil {
-	// 		log.Fatal(err)
-	// 	}
-	// 	manager.Work_from_number(number, file_RGB)
+	var generated_numbers_runes []uint8
+	for i := 0; i < numbers_count; i++ {
 
-	// case "2":
-	// 	var image_path string
+		for _, j := range generated_numbers[i] {
+
+			n, _ := strconv.Atoi(string(j))
+
+			generated_numbers_runes = append(generated_numbers_runes, uint8(n))
+
+		}
+	}
+
+	fmt.Println(generated_numbers_runes[:5])
+
+	// file, _ := os.OpenFile(file_with_numbers, os.O_WRONLY, os.ModePerm)
+	// file.Write(generated_numbers)
+}
+
+func main_1() {
+	// ############################################
+	// Variables definition
+	// ############################################
+
+	const (
+		// dir of the `main` file
+		CWD string = "/Users/philr/Desktop/гитхаб/Сжатие/Program_Go/"
+
+		// сколько будет сгенерировано чисел,
+		// стоит учитывать вычислительные мощности компьютера
+		numbers_count int = 100_000_000 // 1_000_000_000
+	)
+
+	var (
+		dirs = [2]string{
+			filepath.Join(CWD, "generated_numbers"),
+			filepath.Join(CWD, "work_dir"),
+		}
+		file_with_numbers string = filepath.Join(dirs[0], "generated_numbers.txt")
+		image_RGB         string = filepath.Join(dirs[1], "image_RGB.json")
+		generated_numbers types.Channel
+	)
+	// ############################################
+	// ############################################
+
+	// Create dirs
+	for _, dir := range dirs {
+		manager.Manage_dir(dir)
+	}
+
+	generated_numbers = manager.Generator(file_with_numbers, numbers_count)
+
+	// TODO: uncomment
+	// Listen user input
+	// 	var old_image_path string
 	// 	fmt.Print("Введите путь: ")
-	// 	_, err := fmt.Scanln(&image_path)
+	// 	_, err := fmt.Scanln(&old_image_path)
 	// 	if err != nil {
 	// 		log.Fatal(err)
 	// 	}
-	// 	manager.Work_from_image(image_path, file_RGB)
-	// }
 
-	image_path := "work_dir/image.png"
-	manager.Work_from_image(image_path, file_RGB)
-	// fmt.Println("Main: Done.")
+	// TODO: Заглушка
+	old_image_path := filepath.Join(dirs[1], "image.png")
+
+	manager.Manage_file(image_RGB)
+	img_data := manager.Get_image_channels(old_image_path, image_RGB)
+	manager.Save_image_channels(img_data, image_RGB)
+	img_data = manager.Load_image_channels(image_RGB)
+	manager.Compress_image_channels(generated_numbers, img_data)
 }

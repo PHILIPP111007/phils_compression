@@ -1,2 +1,4 @@
 github.com/db47h/rand64 v1.0.0 h1:raegN9v6lR1kJe16y+Q3JIAnTYF5KMBISv9ubb+H72w=
 github.com/db47h/rand64 v1.0.0/go.mod h1:ZeI+++a3JcbC1UjJG6o5Qbuc98W9TVqnhVlQm1qW6GM=
+github.com/sarpdag/boyermoore v0.0.0-20210425165139-a89ed1b5913b h1:w+QcWdLtVj/QOETC5LPIVCrIibmazfLzb0ZFhlNlRho=
+github.com/sarpdag/boyermoore v0.0.0-20210425165139-a89ed1b5913b/go.mod h1:8hshlfDS6OTACtPiQ+qI16nHUsoy37NNrY2I29gfONs=
