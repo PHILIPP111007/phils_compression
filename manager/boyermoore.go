@@ -9,7 +9,6 @@ import (
 // Index returns the first index substr found in the s.
 // function should return same result as `strings.Index` function
 func Index(array types.Array, subArray types.SubArray, subArrayLen int) (int, int) {
-
 	d := calculateSlideTable(subArray, subArrayLen)
 	return indexWithTable(&d, array, subArray, subArrayLen)
 }
@@ -51,7 +50,7 @@ func indexWithTable(d *[256]int, array types.Array, subArray types.SubArray, sub
 		j := J
 
 		// Ищем вхождение
-		x, y := getArrayIndexes(i, j)
+		x, y := getArrayIndexes(i + j)
 		for j >= 0 && subArray[j] == array.Value[x][y] {
 			j--
 
@@ -59,7 +58,7 @@ func indexWithTable(d *[256]int, array types.Array, subArray types.SubArray, sub
 				return x, y // Найдено вхождение
 			}
 
-			x, y = getArrayIndexes(i, j)
+			x, y = getArrayIndexes(i + j)
 		}
 
 		// Смещение в соответствии с таблицей плохих символов
@@ -86,17 +85,15 @@ func calculateSlideTable(subArray types.SubArray, subArrayLen int) [256]int {
 	return d
 }
 
-func getArrayIndexes(i, j int) (int, int) {
-
-	sum_i_j := i + j
+func getArrayIndexes(sum_i_j int) (x int, y int) {
 
 	for x, arrLen := range ArrayLenTable {
 
-		if sum_i_j-arrLen < 0 {
-			return x, sum_i_j
-		}
-
 		sum_i_j -= arrLen
+
+		if sum_i_j < 0 {
+			return x, (-1 * sum_i_j) - 1
+		}
 	}
 
 	return 0, 0
