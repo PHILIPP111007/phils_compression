@@ -1,9 +1,9 @@
 package types
 
-type Channel []byte
+type SubArray []byte
 
-type Image struct {
-	Red   Channel `json:"red"`
-	Green Channel `json:"green"`
-	Blue  Channel `json:"blue"`
+type Array struct {
+	Value [][]byte `json:"value"`
 }
+
+type ArrayLenTable []int

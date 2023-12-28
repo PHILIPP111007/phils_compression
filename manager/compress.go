@@ -3,52 +3,52 @@ package manager
 import (
 	"fmt"
 
-	"phil.com/boyermoore"
 	"phil.com/types"
 )
 
 var (
-	channel, generated_numbers types.Channel
-	channel_size               int
+	ArrayLen, subArrayLen int
+	ArrayLenTable         types.ArrayLenTable
 )
 
-func Compress_image_channels(gen_numbers types.Channel, img_data types.Image) {
-	generated_numbers = gen_numbers
+func Compress(array types.Array, subArray types.SubArray) {
 
-	channel = img_data.Red
-	compress_channel("red")
-
-	// channel = img_data.Green
-	// compress_channel("green", img_data.Green)
-
-	// channel = img_data.Blue
-	// compress_channel("blue", img_data.Blue)
-}
-
-func compress_channel(key string) {
+	setSubArrayLen(subArray)
+	setArrayLenAndArrayLenTable(array)
 
 	for {
-		channel_size = len(channel)
-		if channel_size == 0 {
+		if subArrayLen == 0 {
 			break
 		}
 
-		n, _ := recursion(1, -1)
-		fmt.Println(n, channel_size)
+		n, x, y := recursion(array, subArray, 1, 0, 0)
+		fmt.Println(subArrayLen, n, x, y)
 
-		channel = channel[n:]
+		subArray = subArray[n:]
+		subArrayLen -= n
 	}
 }
 
-func recursion(n, index int) (N int, Index int) {
-	var index_new = finding_1(channel[:n])
+func recursion(array types.Array, subArray types.SubArray, n, x, y int) (int, int, int) {
+	var x_new, y_new = getIndex(array, subArray[:n], n)
 
-	if index_new != -1 && n < channel_size {
-		return recursion(n+1, index_new)
+	if x_new != -1 && n < subArrayLen {
+		return recursion(array, subArray, n+1, x_new, y_new)
 	}
-	return n, index
+	return n, x, y
 }
 
-func finding_1(channel types.Channel) int {
-	return boyermoore.Index(generated_numbers, channel)
+func getIndex(array types.Array, subArray types.SubArray, subArrayLen int) (int, int) {
+	return Index(array, subArray, subArrayLen)
+}
+
+func setArrayLenAndArrayLenTable(array types.Array) {
+	for _, elem := range array.Value {
+		ArrayLen += len(elem)
+		ArrayLenTable = append(ArrayLenTable, len(elem))
+	}
+}
+
+func setSubArrayLen(subArray types.SubArray) {
+	subArrayLen = len(subArray)
 }
