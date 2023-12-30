@@ -39,5 +39,7 @@ func main() {
 
 	manager.Generator(fileWithNumbers, &array, numbersCount)
 	subArray = manager.GetRandomArray(100)
+	subArray = types.SubArray{'5', '8', '0', '7', '7', '5', '0', '8', '6', '5', '1', '4', '3', '4'}
+
 	manager.Compress(&array, &subArray)
 }
