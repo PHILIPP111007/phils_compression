@@ -22,27 +22,22 @@ const (
 
 	// сколько будет сгенерировано чисел,
 	// стоит учитывать вычислительные мощности компьютера
-	numbersCount int = 10_000 // 1_000_000_000
+	numbersCount int = 100_000_000 // 1_000_000_000
 )
 
 var (
-	dirs = [2]string{
-		filepath.Join(CWD, "generated_numbers"),
-		filepath.Join(CWD, "work_dir"),
-	}
-	fileWithNumbers string = filepath.Join(dirs[0], "generated_numbers.txt")
+	workDir                = filepath.Join(CWD, "work_dir")
+	fileWithNumbers string = filepath.Join(workDir, "generated_numbers.json")
 
 	subArray types.SubArray
-	array    types.Array
+	array    types.ArrayJSON
 )
 
 func main() {
-	// Create dirs
-	for _, dir := range dirs {
-		manager.Manage_dir(dir)
-	}
+	// Create dir
+	manager.Manage_dir(workDir)
 
 	manager.Generator(fileWithNumbers, &array, numbersCount)
 	subArray = manager.GetRandomArray(100)
-	manager.Compress(array, subArray)
+	manager.Compress(&array, &subArray)
 }

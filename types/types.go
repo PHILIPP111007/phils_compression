@@ -2,8 +2,10 @@ package types
 
 type SubArray []byte
 
-type Array struct {
-	Value [][]byte `json:"value"`
+type Array [][]byte
+
+type ArrayJSON struct {
+	Value Array `json:"value"`
 }
 
 type ArrayLenTable []int

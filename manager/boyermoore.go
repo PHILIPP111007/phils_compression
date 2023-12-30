@@ -8,14 +8,17 @@ import (
 
 // Index returns the first index substr found in the s.
 // function should return same result as `strings.Index` function
-func Index(array types.Array, subArray types.SubArray, subArrayLen int) (int, int) {
+func Index(array *types.ArrayJSON, subArray types.SubArray, subArrayLen int) (int, int) {
 	d := calculateSlideTable(subArray, subArrayLen)
 	return indexWithTable(&d, array, subArray, subArrayLen)
 }
 
 // IndexWithTable returns the first index substr found in the s.
 // It needs the slide information of substr
-func indexWithTable(d *[256]int, array types.Array, subArray types.SubArray, subArrayLen int) (int, int) {
+func indexWithTable(d *[256]int, array *types.ArrayJSON, subArray types.SubArray, subArrayLen int) (int, int) {
+
+	fmt.Println(".")
+
 	switch {
 	case subArrayLen == 0:
 		return 0, 0
@@ -87,14 +90,22 @@ func calculateSlideTable(subArray types.SubArray, subArrayLen int) [256]int {
 
 func getArrayIndexes(sum_i_j int) (x int, y int) {
 
-	for x, arrLen := range ArrayLenTable {
+	low := 0
+	high := ArrayLenTableLen - 1
 
-		sum_i_j -= arrLen
+	for low <= high {
+		median := (low + high) / 2
 
-		if sum_i_j < 0 {
-			return x, (-1 * sum_i_j) - 1
+		if ArrayLenTable[median] < sum_i_j {
+			low = median + 1
+		} else {
+			high = median - 1
 		}
 	}
 
-	return 0, 0
+	if ArrayLenTable[low] > sum_i_j {
+
+		return low, ArrayLenTable[low] - sum_i_j - 1
+	}
+	return low, sum_i_j - ArrayLenTable[low]
 }

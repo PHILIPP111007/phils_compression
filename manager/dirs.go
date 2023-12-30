@@ -9,11 +9,12 @@ func Manage_file(file_path string) (is_created_before bool) {
 		file, err := os.Create(file_path)
 		Err_check(err)
 
-		file.Close()
+		err = file.Close()
+		Err_check(err)
+
 		return false
-	} else {
-		return true
 	}
+	return true
 }
 
 func Manage_dir(dir string) {
